@@ -10,7 +10,7 @@ spring:
         registration:
           keycloak:
             client-id: api-gateway
-            client-secret: bK5OTiQbOWo6Kc65WZLe4315noM4OjHN0xFpgwOYPbwknahqKztPSYQIqygumfIons42zpjnyE01GRsekvH6eS
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
             scope: openid
             authorization-grant-type: authorization_code
         provider:

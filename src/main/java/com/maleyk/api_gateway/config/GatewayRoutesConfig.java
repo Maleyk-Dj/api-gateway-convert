@@ -20,7 +20,17 @@ public class GatewayRoutesConfig {
                         RequestPredicates.path("/api/files").or(RequestPredicates.path("/api/files/**")),
                         http()
                 )
+                .filter(UserLoginHeaderFilter.addUserLoginHeader())
                 .filter(lb("flow-manager"))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> subscriptionServiceRoutes() {
+        return GatewayRouterFunctions.route("subscription-service-route")
+                .route(RequestPredicates.path("/api/subscriptions/**"), http())
+                .filter(UserLoginHeaderFilter.addUserLoginHeader())
+                .filter(lb("subscription-service"))
                 .build();
     }
 }
