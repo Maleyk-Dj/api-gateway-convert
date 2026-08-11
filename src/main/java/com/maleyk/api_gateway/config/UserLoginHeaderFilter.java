@@ -5,20 +5,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.servlet.function.HandlerFilterFunction;
-import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
+
+import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.addRequestHeader;
 
 public class UserLoginHeaderFilter {
 
     public static HandlerFilterFunction<ServerResponse, ServerResponse> addUserLoginHeader() {
         return (request, next) -> {
             String login = extractLogin(SecurityContextHolder.getContext().getAuthentication());
-
-            ServerRequest requestToForward = (login != null)
-                    ? ServerRequest.from(request).header("X-User-Login", login).build()
-                    : request;
-
-            return next.handle(requestToForward);
+            return login != null
+                    ? addRequestHeader("X-User-Login", login).filter(request, next)
+                    : next.handle(request);
         };
     }
 
