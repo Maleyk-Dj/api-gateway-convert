@@ -1,5 +1,6 @@
 package com.maleyk.api_gateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,24 +14,36 @@ import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFuncti
 @Configuration
 public class GatewayRoutesConfig {
 
+    @Value("${services.flow-manager.name}")
+    private String flowManagerServiceName;
+
+    @Value("${services.flow-manager.path}")
+    private String flowManagerPath;
+
+    @Value("${services.subscription-service.name}")
+    private String subscriptionServiceName;
+
+    @Value("${services.subscription-service.path}")
+    private String subscriptionServicePath;
+
     @Bean
     public RouterFunction<ServerResponse> flowManagerRoutes() {
         return GatewayRouterFunctions.route("flow-manager-route")
                 .route(
-                        RequestPredicates.path("/api/files").or(RequestPredicates.path("/api/files/**")),
+                        RequestPredicates.path(flowManagerPath).or(RequestPredicates.path(flowManagerPath + "/**")),
                         http()
                 )
                 .filter(UserLoginHeaderFilter.addUserLoginHeader())
-                .filter(lb("flow-manager"))
+                .filter(lb(flowManagerServiceName))
                 .build();
     }
 
     @Bean
     public RouterFunction<ServerResponse> subscriptionServiceRoutes() {
         return GatewayRouterFunctions.route("subscription-service-route")
-                .route(RequestPredicates.path("/api/subscriptions/**"), http())
+                .route(RequestPredicates.path(subscriptionServicePath + "/**"), http())
                 .filter(UserLoginHeaderFilter.addUserLoginHeader())
-                .filter(lb("subscription-service"))
+                .filter(lb(subscriptionServiceName))
                 .build();
     }
 }

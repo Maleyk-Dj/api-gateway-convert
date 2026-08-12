@@ -15,10 +15,21 @@ spring:
             authorization-grant-type: authorization_code
         provider:
           keycloak:
-            issuer-uri: http://localhost:8180/realms/microservices
+            issuer-uri: ${keycloak.issuer-uri}
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/microservices
+          issuer-uri: ${keycloak.issuer-uri}
+
+keycloak:
+  issuer-uri: http://localhost:8180/realms/microservices
+
+services:
+  flow-manager:
+    name: flow-manager
+    path: /api/files
+  subscription-service:
+    name: subscription-service
+    path: /api/subscriptions
 
 eureka:
   client:
