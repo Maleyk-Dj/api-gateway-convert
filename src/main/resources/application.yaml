@@ -27,9 +27,11 @@ services:
   flow-manager:
     name: flow-manager
     path: /api/files
+    route-id: flow-manager-route
   subscription-service:
     name: subscription-service
     path: /api/subscriptions
+    route-id: subscription-service-route
 
 eureka:
   client:

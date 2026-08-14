@@ -26,9 +26,16 @@ public class GatewayRoutesConfig {
     @Value("${services.subscription-service.path}")
     private String subscriptionServicePath;
 
+    @Value("${services.flow-manager.route-id}")
+    private String flowManagerRouteId;
+
+    @Value("${services.subscription-service.route-id}")
+    private String subscriptionServiceRouteId;
+
+
     @Bean
     public RouterFunction<ServerResponse> flowManagerRoutes() {
-        return GatewayRouterFunctions.route("flow-manager-route")
+        return GatewayRouterFunctions.route(flowManagerRouteId)
                 .route(
                         RequestPredicates.path(flowManagerPath).or(RequestPredicates.path(flowManagerPath + "/**")),
                         http()
@@ -40,7 +47,7 @@ public class GatewayRoutesConfig {
 
     @Bean
     public RouterFunction<ServerResponse> subscriptionServiceRoutes() {
-        return GatewayRouterFunctions.route("subscription-service-route")
+        return GatewayRouterFunctions.route(subscriptionServiceRouteId)
                 .route(RequestPredicates.path(subscriptionServicePath + "/**"), http())
                 .filter(UserLoginHeaderFilter.addUserLoginHeader())
                 .filter(lb(subscriptionServiceName))
