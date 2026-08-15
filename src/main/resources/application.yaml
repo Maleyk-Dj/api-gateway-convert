@@ -10,15 +10,28 @@ spring:
         registration:
           keycloak:
             client-id: api-gateway
-            client-secret: bK5OTiQbOWo6Kc65WZLe4315noM4OjHN0xFpgwOYPbwknahqKztPSYQIqygumfIons42zpjnyE01GRsekvH6eS
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
             scope: openid
             authorization-grant-type: authorization_code
         provider:
           keycloak:
-            issuer-uri: http://localhost:8180/realms/microservices
+            issuer-uri: ${keycloak.issuer-uri}
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/microservices
+          issuer-uri: ${keycloak.issuer-uri}
+
+keycloak:
+  issuer-uri: http://localhost:8180/realms/microservices
+
+services:
+  flow-manager:
+    name: flow-manager
+    path: /api/files
+    route-id: flow-manager-route
+  subscription-service:
+    name: subscription-service
+    path: /api/subscriptions
+    route-id: subscription-service-route
 
 eureka:
   client:
